@@ -17,5 +17,6 @@ namespace AdminTemplate.ViewModels
         [Required(ErrorMessage = "E-mail is required!")]
         [EmailAddress]
         public string Email { get; set; }
+        public DateTime RegDate { get; internal set; }
     }
 }

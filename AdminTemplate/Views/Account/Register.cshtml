@@ -21,7 +21,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
     <!-- Title -->
-    <title>Register Page</title>
+    <title>Register</title>
     <link rel="stylesheet" href="..\..\assets\fonts\fonts\font-awesome.min.css">
 
     <!-- Font Family-->
@@ -53,6 +53,7 @@
                                 <img src="..\..\assets\images\brand\logo.png" class="h-8" alt="">
                             </div>
                             <form class="card authentication" asp-controller="Account" asp-action="Register" method="post">
+                                <span asp-validation-summary="ModelOnly"></span><br>
                                 <div class="card-body sign-up-page p-7">
                                     <div class="card-title text-center">Create New Account</div>
                                     <div class="input-icon form-group">

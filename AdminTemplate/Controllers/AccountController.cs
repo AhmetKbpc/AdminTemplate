@@ -131,13 +131,13 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpGet]
+    [HttpGet("~/Login")]
     public IActionResult Login()
     {
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("~/Login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid)
@@ -151,7 +151,7 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Profile", "Account",user.Id);
         }
         else if (result.IsLockedOut)
         {
@@ -172,18 +172,20 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+
+    [HttpGet("~/AccesDenied")]
     public IActionResult AccessDenied()
     {
         return View();
     }
 
-    [HttpGet]
+    [HttpGet("~/ResetPassword")]
     public IActionResult ResetPassword()
     {
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("~/ResetPassword")]
     public async Task<IActionResult> ResetPassword(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
@@ -217,6 +219,8 @@ public class AccountController : Controller
         return View();
     }
 
+
+    [HttpGet("~/ConfirmResetPassword")]
     public IActionResult ConfirmResetPassword(string userId, string code)
     {
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
@@ -229,7 +233,7 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("~/ConfirmResetPassword")]
     public async Task<IActionResult> ConfirmResetPassword(ResetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -267,7 +271,8 @@ public class AccountController : Controller
         {
             Email = user.Email,
             Name = user.Name,
-            Surname = user.Surname
+            Surname = user.Surname,
+            RegDate=user.RegisterDate
         };
         return View(model);
     }
