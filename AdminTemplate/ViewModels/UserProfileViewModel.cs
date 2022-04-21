@@ -18,5 +18,6 @@ namespace AdminTemplate.ViewModels
         [EmailAddress]
         public string Email { get; set; }
         public DateTime RegDate { get; internal set; }
+        public string Tel { get; internal set; }
     }
 }

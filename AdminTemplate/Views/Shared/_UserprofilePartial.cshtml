@@ -1,9 +1,40 @@
-﻿<div class="user-profile">
+﻿@model UserProfileViewModel
+
+
+<div class="user-profile">
     <div class="dropdown user-pro-body">
-        <div><img src="..\..\assets\images\faces\female\25.jpeg" alt="user-img" class="img-circle"></div>
+        <div>
+            @if (@Context.User.Identity.IsAuthenticated)
+            {
+                <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="user-img" class="img-circle">
+            }
+            else
+            {
+                <img src="..\..\assets\images\faces\user.png" alt="user-img" class="img-circle">
+            }
+
+
+
+            
+
+        </div>
         <div class="mb-2">
-            <a href="#" class="" data-toggle="" aria-haspopup="true" aria-expanded="false"> <span class="font-weight-semibold">Joyce Stewart</span>  </a>
-            <br><span class="text-gray">Web Designer</span>
+            @if (@Context.User.Identity.IsAuthenticated)
+            {
+                <a href="#" class="" data-toggle="" aria-haspopup="true" aria-expanded="false">
+                    <span class="font-weight-semibold">@Model.Name @Model.Surname</span>
+                </a>
+                <br>
+
+                <span class="text-gray">Kullanıcı</span>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" type="submit" class="btn btn-primary ">Sign in</a>
+                <a asp-controller="Account" asp-action="Register" type="submit" class="btn btn-primary ">Sign up</a>
+            }
+
+
         </div>
     </div>
 </div>

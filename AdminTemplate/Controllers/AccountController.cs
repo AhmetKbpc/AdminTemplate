@@ -67,6 +67,7 @@ public class AccountController : Controller
             Email = model.Email,
             Name = model.Name,
             Surname = model.Surname
+
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -151,7 +152,7 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Profile", "Account",user.Id);
+            return RedirectToAction("Profile", "Account");
         }
         else if (result.IsLockedOut)
         {
@@ -272,7 +273,8 @@ public class AccountController : Controller
             Email = user.Email,
             Name = user.Name,
             Surname = user.Surname,
-            RegDate=user.RegisterDate
+            RegDate=user.RegisterDate,
+            Tel=user.PhoneNumber
         };
         return View(model);
     }
