@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AdminTemplate.Models.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace AdminTemplate.ViewModels
 {
@@ -19,5 +20,6 @@ namespace AdminTemplate.ViewModels
         public string Email { get; set; }
         public DateTime RegDate { get; internal set; }
         public string Tel { get; internal set; }
+        public string Role { get; internal set; }
     }
 }

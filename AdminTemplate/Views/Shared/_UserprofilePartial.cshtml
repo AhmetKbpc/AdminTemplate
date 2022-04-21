@@ -15,7 +15,7 @@
 
 
 
-            
+
 
         </div>
         <div class="mb-2">
@@ -26,7 +26,9 @@
                 </a>
                 <br>
 
-                <span class="text-gray">Kullanıcı</span>
+                <span class="text-gray">@Model.Role</span>
+                <br>
+                <a asp-controller="Account" asp-action="Logout" type="submit" class="btn btn-primary ">Logout</a>
             }
             else
             {
