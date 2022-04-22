@@ -49,6 +49,11 @@ public class AccountController : Controller
     [HttpGet("~/Register")]
     public IActionResult Register()
     {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         return View();
     }
 
@@ -135,6 +140,10 @@ public class AccountController : Controller
     [HttpGet("~/Login")]
     public IActionResult Login()
     {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -268,22 +277,36 @@ public class AccountController : Controller
     public async Task<IActionResult> Profile()
     {
         var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
-  //    var role = await _roleManager.FindByNameAsync(HttpContext.User.Identity!.Name);
         var model = new UserProfileViewModel()
         {
             Email = user.Email,
             Name = user.Name,
             Surname = user.Surname,
-            RegDate=user.RegisterDate,
-            Tel=user.PhoneNumber,
-            Role="Buraya Rol Gelecek"
+            RegDate = user.RegisterDate,
+            Tel = user.PhoneNumber,
+            Role = "Buraya Rol Gelecek"
         };
         return View(model);
     }
 
+    public async Task<IActionResult> ProfileEdit()
+    {
+        var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
+        var model = new UserProfileViewModel()
+        {
+            Email = user.Email,
+            Name = user.Name,
+            Surname = user.Surname,
+            RegDate = user.RegisterDate,
+            Tel = user.PhoneNumber
+        };
+        return View(model);
+    }
+
+
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Profile(UserProfileViewModel model)
+    public async Task<IActionResult> ProfileEdit(UserProfileViewModel model)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -291,7 +314,7 @@ public class AccountController : Controller
         user.Name = model.Name;
         user.Surname = model.Surname;
         user.Email = model.Email;
-        
+
 
         bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
         if (isAdmin && user.Email != model.Email)
@@ -332,4 +355,6 @@ public class AccountController : Controller
         }
         return View(model);
     }
+
+
 }

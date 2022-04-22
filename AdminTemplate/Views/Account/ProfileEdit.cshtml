@@ -1,5 +1,193 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model UserProfileViewModel
+
 @{
+    Layout = "_Layout";
 }
+<div class=" content-area">
+    <div class="page-header">
+        <h4 class="page-title">Edit Profile</h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-xl-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">My Profile</h3>
+                </div>
+                <div class="card-body p-4 bg-primary text-white">
+                    <form>
+                        <div class="row text-center">
+                            <div class="col-12">
+                                <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="" class="profile-img img-responsive center-block">
+                            </div>
+                            <div class="col-12">
+                                <h4 class="mb-1 mt-2 ">@Model.Name @Model.Surname.ToUpper()</h4>
+                                <p class="mb-0">Adminor Administrator</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+
+                    <div class="text-center text-sm-left mb-sm-0">
+                        <div>
+                            <button class="btn btn-primary btn-block mt-5" type="button">
+                                <i class="fa fa-fw fa-camera"></i>
+                                <span>Change Photo</span>
+                            </button>
+                        </div>
+                        <button class="btn btn-secondary btn-block mt-5" type="button">
+                            <i class="fa fa-fw fa-camera"></i>
+                            <span>Remove Photo</span>
+                        </button>
+                    </div>
+
+
+                    <div class="text-center">
+                        <span class="badge badge-secondary mt-5">administrator</span>
+                        <div class="text-muted"><small>Joined @Model.RegDate.ToShortDateString()</small></div>
+                    </div>
+                    <div class="form-footer">
+                    </div>
+
+                </div>
+            </div>
+            <div class="card">
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-xl-9">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title">Edit profile</h2></div>
+                <div class="card-body">
+                    <div class="e-profile">
+                        <div class="row">
+                            <div class="col-12 col-sm-auto mb-3">
+                                <div class="mx-auto img-2">
+                                    <img src="  " alt="">
+                                </div>
+                            </div>
+                            <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                            </div>
+                        </div>
+
+                        <div class="tab-content pt-3">
+                            <div class="tab-pane active">
+                                <form class="form" novalidate="">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Name</label>
+                                                        <input type="text" class="form-control" name="example-text-input" placeholder="Name" value="@Model.Name">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Surname</label>
+                                                        <input class="form-control" type="text" name="username" placeholder="Surname" value="@Model.Surname">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Email</label>
+                                                        <input class="form-control" type="text" placeholder="user@example.com" value="@Model.Email">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Username</label>
+                                                        <input class="form-control" type="text" name="username" placeholder="Username" value="@User.Identity.Name">
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Adress</label>
+                                                        <textarea class="form-control" rows="2" placeholder="Adress"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="mb-2"><h2 class="card-title">Personal Info</h2></div>
+                                            <div class="row">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group ">
+                                                        <label class="form-label">Date Of Birth</label>
+
+                                                        <div class="wd-200 mg-b-30">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text">
+                                                                        <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Mobile <span class="d-none d-xl-inline">No</span></label>
+                                                        <input class="form-control" type="num" placeholder="Enter Mobile no">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="mb-2"><h2 class="card-title">Change Password</h2></div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Current Password</label>
+                                                        <input class="form-control" type="password" placeholder="••••••">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">New Password</label>
+                                                        <input class="form-control" type="password" placeholder="••••••">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                                        <input class="form-control" type="password" placeholder="••••••">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="float-right mt-0 mb-0">
+                                        <button class="btn btn-secondary mr-3" type="submit">Cancel</button>
+                                        <button class="btn btn-primary " type="submit">Update Profile</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

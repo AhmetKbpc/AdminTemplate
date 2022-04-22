@@ -2,15 +2,15 @@
 
 
 <div class="user-profile">
-    <div class="dropdown user-pro-body">
+    <div class="dropdown mb-5">
         <div>
             @if (@Context.User.Identity.IsAuthenticated)
             {
-                <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="user-img" class="img-circle">
+                <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="user-img" class="img-circle mb-5" width="150px">
             }
             else
             {
-                <img src="..\..\assets\images\faces\user.png" alt="user-img" class="img-circle">
+                <img src="..\..\assets\images\faces\user.jpg" alt="user-img" class="img-circle">
             }
 
 
@@ -18,22 +18,22 @@
 
 
         </div>
-        <div class="mb-2">
+        <div class="mb-5">
             @if (@Context.User.Identity.IsAuthenticated)
             {
-                <a href="#" class="" data-toggle="" aria-haspopup="true" aria-expanded="false">
-                    <span class="font-weight-semibold">@Model.Name @Model.Surname</span>
+                <a asp-controller="Account" asp-action="Profile" class="" data-toggle="" aria-haspopup="true" aria-expanded="false">
+                    <span class="font-weight-semibold">@User.Identity.Name</span>
                 </a>
                 <br>
 
-                <span class="text-gray">@Model.Role</span>
+                <span class="text-gray"></span>
                 <br>
                 <a asp-controller="Account" asp-action="Logout" type="submit" class="btn btn-primary ">Logout</a>
             }
             else
             {
                 <a asp-controller="Account" asp-action="Login" type="submit" class="btn btn-primary ">Sign in</a>
-                <a asp-controller="Account" asp-action="Register" type="submit" class="btn btn-primary ">Sign up</a>
+                <a asp-controller="Account" asp-action="Register" type="submit" class="btn btn-secondary ">Sign up</a>
             }
 
 

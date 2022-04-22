@@ -22,7 +22,7 @@
 								    <div class="card-body p-0">
 										<div class="card-body bg-primary text-white">
 											<img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="" class="profile-img img-responsive center-block">
-											<a href="editprofile.html" class="profile-image">
+											<a asp-controller="Account" asp-action="ProfileEdit" class="profile-image">
 												<span class="fa fa-pencil" aria-hidden="true"></span>
 											</a>
 											<div class="profile-label mt-3">
