@@ -8,6 +8,11 @@ namespace AdminTemplate.ViewModels
         [Required(ErrorMessage = "Name is required!")]
         [Display(Name = "Name")]
         [StringLength(50)]
+        public string Username { get; set; }
+
+        [Required(ErrorMessage = "Name is required!")]
+        [Display(Name = "Name")]
+        [StringLength(50)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Surname is required!")]
@@ -19,7 +24,6 @@ namespace AdminTemplate.ViewModels
         [EmailAddress]
         public string Email { get; set; }
         public DateTime RegDate { get; internal set; }
-        public string Tel { get; internal set; }
-        public string Role { get; internal set; }
+
     }
 }

@@ -82,25 +82,25 @@ public class AccountController : Controller
             var count = _userManager.Users.Count();
             result = await _userManager.AddToRoleAsync(user, count == 1 ? Roles.Admin : Roles.Passive);
 
-            ////Email gönderme - Aktivasyon
-            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code },
-            //    protocol: Request.Scheme);
+            //Email gönderme - Aktivasyon
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code },
+                protocol: Request.Scheme);
 
-            //var email = new MailModel()
-            //{
-            //    To = new List<EmailModel>
-            //    {
-            //        new EmailModel()
-            //            { Adress = user.Email, Name = user.UserName }
-            //    },
-            //    Body =
-            //        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-            //    Subject = "Confirm your email"
-            //};
+            var email = new MailModel()
+            {
+                To = new List<EmailModel>
+                {
+                    new EmailModel()
+                        { Adress = user.Email, Name = user.UserName }
+                },
+                Body =
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                Subject = "Confirm your email"
+            };
 
-            //await _emailService.SendMailAsync(email);
+            await _emailService.SendMailAsync(email);
             //TODO: Login olma
             return RedirectToAction("Login");
         }
@@ -276,48 +276,66 @@ public class AccountController : Controller
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
-        var model = new UserProfileViewModel()
+        var name = HttpContext.User.Identity.Name;
+        var user = await _userManager.FindByNameAsync(name);
+        var model = new UpdateProfilePasswordViewModel
         {
-            Email = user.Email,
-            Name = user.Name,
-            Surname = user.Surname,
-            RegDate = user.RegisterDate,
-            Tel = user.PhoneNumber,
-            Role = "Buraya Rol Gelecek"
+            UserProfileVM = new UserProfileViewModel()
+            {
+                Username = user.UserName,
+                Email = user.Email,
+                Name = user.Name,
+                Surname = user.Surname,
+                RegDate = user.RegisterDate
+            }
         };
-        return View(model);
-    }
 
-    public async Task<IActionResult> ProfileEdit()
-    {
-        var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
-        var model = new UserProfileViewModel()
-        {
-            Email = user.Email,
-            Name = user.Name,
-            Surname = user.Surname,
-            RegDate = user.RegisterDate,
-            Tel = user.PhoneNumber
-        };
         return View(model);
     }
 
 
     [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> ProfileEdit(UserProfileViewModel model)
+    [HttpGet]
+    public async Task<IActionResult> ProfileEdit()
     {
+        var name = HttpContext.User.Identity.Name;
+        var user = await _userManager.FindByNameAsync(name);
+        var model = new UpdateProfilePasswordViewModel
+        {
+            UserProfileVM = new UserProfileViewModel()
+            {
+                Username = user.UserName,
+                Email = user.Email,
+                Name = user.Name,
+                Surname = user.Surname,
+                RegDate = user.RegisterDate
+            }
+        };
+
+        return View(model);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> ProfileEdit(UpdateProfilePasswordViewModel model)
+    {
+
         if (!ModelState.IsValid)
+        {
             return View(model);
-        var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
-        user.Name = model.Name;
-        user.Surname = model.Surname;
-        user.Email = model.Email;
+        }
 
+        var name = HttpContext.User.Identity.Name;
+        var user = await _userManager.FindByNameAsync(name);
 
-        bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
-        if (isAdmin && user.Email != model.Email)
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "User not found!");
+            return View(model);
+        }
+
+        var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
+        if (user.Email != model.UserProfileVM.Email && !isAdmin)
         {
             await _userManager.RemoveFromRoleAsync(user, Roles.User);
             await _userManager.AddToRoleAsync(user, Roles.Passive);
@@ -325,36 +343,74 @@ public class AccountController : Controller
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code },
-                Request.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
 
             var emailMessage = new MailModel()
             {
-                To = new List<EmailModel>
+                To = new List<EmailModel> { new()
                 {
-                    new() {Adress = model.Email, Name = user.Name }
-                },
+                    Adress = model.UserProfileVM.Email,
+                    Name = model.UserProfileVM.Name
+                }},
                 Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here </a>.",
                 Subject = "Confirm your email"
             };
+
             await _emailService.SendMailAsync(emailMessage);
         }
-        user.Name = model.Name;
-        user.Surname = model.Surname;
-        user.Email = model.Email;
+
+
+        user.Name = model.UserProfileVM.Name;
+        user.Surname = model.UserProfileVM.Surname;
+        user.Email = model.UserProfileVM.Email;
+        user.UserName = model.UserProfileVM.Username;
 
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
-            ViewBag.Message = "Update Successful!";
+            TempData["UpdSuccess"] = "Your profile has been updated successfully";
+            var userl = await _userManager.FindByNameAsync(user.UserName);
+            await _signInManager.SignInAsync(userl, true);
+
         }
         else
         {
             var message = string.Join("<br>", result.Errors.Select(x => x.Description));
-            ViewBag.Message = message;
+            TempData["UpdError"] = message;
         }
+
         return View(model);
     }
+
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(UpdateProfilePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["PassError"] = "There has been an error.";
+            return RedirectToAction(nameof(Profile));
+        }
+
+        var name = HttpContext.User.Identity.Name;
+        var user = await _userManager.FindByNameAsync(name);
+        var result = await _userManager.ChangePasswordAsync(user, model.ChangePasswordVM.CurrentPassword, model.ChangePasswordVM.NewPassword);
+
+        if (result.Succeeded)
+        {
+            TempData["PassSuccess"] = "Your password has been changed successfully";
+        }
+        else
+        {
+            var message = string.Join("<br>", result.Errors.Select(x => x.Description));
+            TempData["PassError"] = message;
+        }
+
+
+        return RedirectToAction(nameof(ProfileEdit));
+    }
+
 
 
 }

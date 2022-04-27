@@ -1,61 +1,88 @@
-﻿@model UserProfileViewModel
+﻿@model UpdateProfilePasswordViewModel
 
 @{
     Layout = "_Layout";
 }
 <div class=" content-area">
     <div class="page-header">
-        <h4 class="page-title">Edit Profile</h4>
+        <h4 class="page-title">Profile Edit</h4>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Pages</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+            <li class="breadcrumb-item active" aria-current="page">Profile</li>
         </ol>
     </div>
-    <div class="row">
-        <div class="col-lg-4 col-xl-3">
+    <div class="row" id="user-profile">
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xl-3">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">My Profile</h3>
+                    <h3 class="card-title">Profile Edit</h3>
                 </div>
-                <div class="card-body p-4 bg-primary text-white">
-                    <form>
-                        <div class="row text-center">
-                            <div class="col-12">
-                                <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="" class="profile-img img-responsive center-block">
-                            </div>
-                            <div class="col-12">
-                                <h4 class="mb-1 mt-2 ">@Model.Name @Model.Surname.ToUpper()</h4>
-                                <p class="mb-0">Adminor Administrator</p>
+                <div class="card-body p-0">
+                    <div class="card-body bg-primary text-white">
+                        <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="" class="profile-img img-responsive center-block">
+                        <div class="profile-label mt-3 text-center">
+                            <span>@Model.UserProfileVM.Name @Model.UserProfileVM.Surname.ToUpper()</span>
+                        </div>
+
+                        <div class="profile-stars text-center">
+                            @if (Context.User.IsInRole(Roles.Admin))
+                            {
+                                <span class="badge badge-success">Administrator</span>
+                            }
+                            else if (Context.User.IsInRole(Roles.User))
+                            {
+                                <span class="badge badge-primary">User</span>
+                            }
+                            else if (Context.User.IsInRole(Roles.Passive))
+                            {
+                                <span class="badge badge-warning">Passive</span>
+
+                                <br />
+                                <small class="text text-warning">Please confirm your email address</small>
+                            }
+                        </div>
+
+                        <div class="text-muted text-center"><small>Joined @Model.UserProfileVM.RegDate.ToShortDateString()</small></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-details">
+                            <div class="list-group list-group-transparent mb-0 mail-inbox">
+                                <button class="btn btn-primary btn-block mt-5" type="button">
+                                    <i class="fa fa-fw fa-camera"></i>
+                                    <span>Change Photo</span>
+                                </button>
+                                <button class="btn btn-secondary btn-block mt-5" type="button">
+                                    <i class="fa fa-fw fa-camera"></i>
+                                    <span>Remove Photo</span>
+                                </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-                <div class="card-body">
 
-                    <div class="text-center text-sm-left mb-sm-0">
-                        <div>
-                            <button class="btn btn-primary btn-block mt-5" type="button">
-                                <i class="fa fa-fw fa-camera"></i>
-                                <span>Change Photo</span>
-                            </button>
-                        </div>
-                        <button class="btn btn-secondary btn-block mt-5" type="button">
-                            <i class="fa fa-fw fa-camera"></i>
-                            <span>Remove Photo</span>
-                        </button>
-                    </div>
-
-
-                    <div class="text-center">
-                        <span class="badge badge-secondary mt-5">administrator</span>
-                        <div class="text-muted"><small>Joined @Model.RegDate.ToShortDateString()</small></div>
-                    </div>
-                    <div class="form-footer">
-                    </div>
-
-                </div>
             </div>
             <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Contact &amp; Personal Info</h2>
+                </div>
+                <div class="card-body">
+                    <div class="media-list">
+
+
+
+                        <div class="media">
+                            <div class="mediaicon bg-secondary">
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body ml-5">
+                                <h6 class="mediafont text-dark mb-0">Email Address</h6><a class="d-block" href="mailto:@Model.UserProfileVM.Email">@Model.UserProfileVM.Email</a>
+                            </div>
+                            <!-- media-body -->
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -64,121 +91,58 @@
                 <div class="card-header"><h2 class="card-title">Edit profile</h2></div>
                 <div class="card-body">
                     <div class="e-profile">
-                        <div class="row">
-                            <div class="col-12 col-sm-auto mb-3">
-                                <div class="mx-auto img-2">
-                                    <img src="  " alt="">
-                                </div>
-                            </div>
-                            <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
-                            </div>
-                        </div>
 
                         <div class="tab-content pt-3">
                             <div class="tab-pane active">
-                                <form class="form" novalidate="">
+                                <form class="form" asp-controller="Account" asp-action="ProfileEdit" method="post">
+                                    @if (TempData["UpdSuccess"] != null)
+                                    {
+                                        <div class="text text-success">@TempData["UpdSuccess"]</div>
+                                    }
+                                    else if (TempData["UpdError"] != null)
+                                    {
+                                        <div class="text text-danger">@TempData["UpdError"]</div>
+                                    }
+                                    <div class="col text text-danger" asp-validation-summary="ModelOnly"></div>
+
                                     <div class="row">
                                         <div class="col">
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
-                                                        <label class="form-label">Name</label>
-                                                        <input type="text" class="form-control" name="example-text-input" placeholder="Name" value="@Model.Name">
+                                                        <label class="form-label">First Name</label>
+                                                        <input asp-for="UserProfileVM.Name" class="form-control" placeholder="Name">
+                                                        <span asp-validation-for="UserProfileVM.Name"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label class="form-label">Surname</label>
-                                                        <input class="form-control" type="text" name="username" placeholder="Surname" value="@Model.Surname">
+                                                        <input asp-for="UserProfileVM.Surname" class="form-control" placeholder="Surname">
+                                                        <span asp-validation-for="UserProfileVM.Surname"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Email</label>
-                                                        <input class="form-control" type="text" placeholder="user@example.com" value="@Model.Email">
-                                                    </div>
                                                     <div class="form-group">
                                                         <label class="form-label">Username</label>
-                                                        <input class="form-control" type="text" name="username" placeholder="Username" value="@User.Identity.Name">
+                                                        <input class="form-control" asp-for="UserProfileVM.Username" placeholder="UserName">
+                                                        <span asp-validation-for="UserProfileVM.Username"></span>
                                                     </div>
                                                 </div>
-
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col mb-3">
+                                                <div class="col-6">
                                                     <div class="form-group">
-                                                        <label class="form-label">Adress</label>
-                                                        <textarea class="form-control" rows="2" placeholder="Adress"></textarea>
+                                                        <label class="form-label">Email</label>
+                                                        <input class="form-control" asp-for="UserProfileVM.Email" placeholder="user@example.com">
+                                                        <span asp-validation-for="UserProfileVM.Email"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-sm-6 mb-3">
-                                            <div class="mb-2"><h2 class="card-title">Personal Info</h2></div>
-                                            <div class="row">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group ">
-                                                        <label class="form-label">Date Of Birth</label>
-
-                                                        <div class="wd-200 mg-b-30">
-                                                            <div class="input-group">
-                                                                <div class="input-group-prepend">
-                                                                    <div class="input-group-text">
-                                                                        <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
-                                                                    </div>
-                                                                </div>
-                                                                <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Mobile <span class="d-none d-xl-inline">No</span></label>
-                                                        <input class="form-control" type="num" placeholder="Enter Mobile no">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 mb-3">
-                                            <div class="mb-2"><h2 class="card-title">Change Password</h2></div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Current Password</label>
-                                                        <input class="form-control" type="password" placeholder="••••••">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label class="form-label">New Password</label>
-                                                        <input class="form-control" type="password" placeholder="••••••">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Confirm <span class="d-none d-xl-inline">Password</span></label>
-                                                        <input class="form-control" type="password" placeholder="••••••">
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <input class="form-control" asp-for="UserProfileVM.RegDate" type="hidden">
                                         </div>
                                     </div>
                                     <div class="float-right mt-0 mb-0">
-                                        <button class="btn btn-secondary mr-3" type="submit">Cancel</button>
                                         <button class="btn btn-primary " type="submit">Update Profile</button>
                                     </div>
                                 </form>
@@ -188,6 +152,58 @@
                 </div>
             </div>
 
+
+            <div class="card">
+                <div class="card-header"><h2 class="card-title">Change Password</h2></div>
+                <div class="card-body">
+                    <form class="form" asp-controller="Account" asp-action="ChangePassword">
+                        @if (TempData["PassSuccess"] != null)
+                        {
+                            <div class="text text-success">@TempData["PassSuccess"]</div>
+                        }
+                        else if (TempData["PassError"] != null)
+                        {
+                            <div class="text text-danger">@TempData["PassError"]</div>
+                        }
+                        <div class="row">
+                            <div class="col-12 col-sm-6 mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">Current Password</label>
+                                            <input class="form-control" asp-for="ChangePasswordVM.CurrentPassword" placeholder="••••••">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">New Password</label>
+                                            <input class="form-control" asp-for="ChangePasswordVM.NewPassword" placeholder="••••••">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                            <input class="form-control" asp-for="ChangePasswordVM.NewPasswordConfirm" placeholder="••••••">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="float-right mt-0 mb-0">
+                            <button class="btn btn-primary " type="submit">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+
+
+
+
+    </div>
