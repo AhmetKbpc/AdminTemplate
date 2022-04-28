@@ -20,7 +20,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="card-body bg-primary text-white">
-                        <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpg" alt="" class="profile-img img-responsive center-block">
+                        <img src="..\..\assets\images\faces\male\@(Context.User.Identity.Name).jpeg" alt="" class="profile-img img-responsive center-block">
                         <a asp-controller="Account" asp-action="ProfileEdit" class="profile-image">
                             <span class="fa fa-pencil" aria-hidden="true"></span>
                         </a>
@@ -127,6 +127,82 @@
 
                 </div>
             </div>
+
+            <div class="card clearfix">
+                <div class="card-header">
+                    <h2 class="card-title">Location</h2>
+                </div>
+                <div class="card-body">
+
+                    @*Google Maps Alanı*@
+                    <div id="map"></div>
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    #map {
+        height: 400px;
+        /* The height is 400 pixels */
+        width: 100%;
+        /* The width is the width of the web page */
+    }
+</style>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Dnmjmg5Qq_HEEogbT1MtKx6jTtxLD-Y&callback=initMap">
+</script>
+<script  async src="https://maps.googleapis.com/maps/api/js?key=   APİKEY    &callback=initMap" defer></script>
+
+<script>
+   console.log("4.js");
+
+var initMap = () =>{
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+    else{
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+var showPosition = (position) => {
+    console.log(position);
+    var pos ={lat:position.coords.latitude,
+              lng: position.coords.longitude
+    };
+    console.log(pos);
+    var mapDiv = document.getElementById('map');
+    var map = new google.maps.Map(mapDiv,{
+        center:pos,
+        zoom:18,
+        mapTypeId: "terrain",
+    });
+
+    var marker = new google.maps.Marker({
+        position:pos,
+        map:map
+    });
+
+    map.addListener('click', (e) =>{
+        console.log(e);
+        var posClick = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng()
+        };
+        //markerları temizle
+        marker.setMap(null);
+        //tıklanan konuma göre marker ekle
+        marker = new google.maps.Marker({
+            position:posClick,
+            map:map,
+            title: 'Clicked location',
+            animation: google.maps.Animation.DROP
+        });
+    });
+
+  
+}
+</script>
